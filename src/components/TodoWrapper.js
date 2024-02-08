@@ -4,11 +4,14 @@ import { v4 as uuidv4 } from "uuid";
 import Todo from "./Todo";
 import EditTodo from "./EditForm";
 import TodoSearch from "./TodoSearch";
+import Category from "./Category";
+import TodoDescription from "./TodoDescription";
 
 const TodoWrapper = () => {
   const [todos, setTodos] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [sortOption, setSortOption] = useState(null);
+  const [filterOption, setFilterOption] = useState("all");
   // marking down the todo functionality
   const toggleComplete = (id) => {
     setTodos(
@@ -20,7 +23,7 @@ const TodoWrapper = () => {
 
   // adding todo
 
-  const addTodo = (todo) => {
+  const addTodo = (todo, category, description) => {
     setTodos([
       ...todos,
       {
@@ -29,6 +32,8 @@ const TodoWrapper = () => {
         complete: false,
         isEditing: false,
         createAt: new Date(),
+        category: category,
+        description: description,
       },
     ]);
   };
@@ -65,29 +70,60 @@ const TodoWrapper = () => {
     setSortOption("title");
   };
 
-  // Sorting function for time of creation
-  const sortByTime = () => {
-    const sortedTodos = [...todos].sort((a, b) => a.createdAt - b.createdAt);
-    setTodos(sortedTodos);
-    setSortOption("time");
+  const filterPending = () => {
+    setFilterOption("pending");
+  };
+
+  const filterComplete = () => {
+    setFilterOption("complete");
+  };
+
+  const clearFilter = () => {
+    setFilterOption("all");
+  };
+
+  const renderFilteredTodos = () => {
+    switch (filterOption) {
+      case "pending":
+        return filteredTodos.filter((todo) => !todo.complete);
+      case "complete":
+        return filteredTodos.filter((todo) => todo.complete);
+      default:
+        return filteredTodos;
+    }
   };
 
   return (
     <div className="todoWrapper">
-      <h1>Welcome to Todo List 📑</h1>
-      {/* Render TodoSearch component */}
       <div className="todo-Container">
+        <h1>Welcome to Todo List 📑</h1>
         <TodoForm addTodo={addTodo} />
         <TodoSearch setSearchValue={setSearchValue} />{" "}
         <div className="filter">
           <button className="filter-btn" onClick={sortByTitle}>
             Sort by Title
           </button>
-          <button className="filter-btn" onClick={sortByTime}>
-            Sort by Time
+          <button
+            className={`${
+              filterOption === "pending" ? "active" : "filter-btn"
+            }`}
+            onClick={filterPending}
+          >
+            Filter Pending
+          </button>
+          <button
+            className={` ${
+              filterOption === "complete" ? "active" : "filter-btn"
+            }`}
+            onClick={filterComplete}
+          >
+            Filter Complete
+          </button>
+          <button className="filter-btn" onClick={clearFilter}>
+            Clear Filter
           </button>
         </div>
-        {filteredTodos.map((todo, index) =>
+        {renderFilteredTodos().map((todo, index) =>
           todo.isEditing ? (
             <EditTodo editTodo={editTask} task={todo} />
           ) : (

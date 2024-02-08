@@ -1,18 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Todo = ({ task, toggleComplete, deleteTodo, editTodo }) => {
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+    toggleComplete(task.id);
+  };
+
   return (
-    <div className="todo-item">
-      <p
-        onClick={() => {
-          toggleComplete(task.id);
-        }}
-        className={`todo-text ${task.complete ? "complete" : ""}`}
-      >
-        {task.task}
-      </p>
+    <div className={`todo-item ${task.complete ? "complete" : "pending"}`}>
+      <input
+        type="checkbox"
+        checked={isChecked}
+        onChange={handleCheckboxChange}
+      />
+      <p>{task.task}</p>
+      <strong className="status">Status: </strong>
+      {task.complete ? "Complete" : "Pending"}
       <div className="todo-icons">
         <FontAwesomeIcon
           icon={faPenToSquare}
