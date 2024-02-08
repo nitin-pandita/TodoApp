@@ -9,7 +9,7 @@ const TodoWrapper = () => {
   const [todos, setTodos] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [sortOption, setSortOption] = useState(null);
-
+  // marking down the todo functionality
   const toggleComplete = (id) => {
     setTodos(
       todos.map((todo) =>
@@ -17,6 +17,8 @@ const TodoWrapper = () => {
       )
     );
   };
+
+  // adding todo
 
   const addTodo = (todo) => {
     setTodos([
@@ -30,11 +32,12 @@ const TodoWrapper = () => {
       },
     ]);
   };
-
+  // for deleting the todos
   const deleteTodo = (id) => {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
+  //
   const editTodo = (id) => {
     setTodos(
       todos.map((todo) =>
@@ -42,7 +45,7 @@ const TodoWrapper = () => {
       )
     );
   };
-
+  // for editing todo
   const editTask = (task, id) => {
     setTodos(
       todos.map((todo) =>
@@ -50,7 +53,7 @@ const TodoWrapper = () => {
       )
     );
   };
-
+  // filtering todo functionality
   const filteredTodos = todos.filter((todo) =>
     todo.task.toLowerCase().includes(searchValue.toLowerCase())
   );
